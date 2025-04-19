@@ -6,6 +6,12 @@ Library for converting first letter of Pinyin to Simplified/Traditional Chinese
 characters.
 
 * Functions
+** How to use
+*pinyinlib-use-method*
+
+1. *quanpin* 全拼
+2. *xiaohe* 小鹤双拼
+
 ** =pinyinlib-build-regexp-char=
    =pinyinlib-build-regexp-char= converts a letter to a regular expression
    containing all the Chinese characters whose pinyins start with the letter.
