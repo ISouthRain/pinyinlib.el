@@ -295,8 +295,13 @@ Thanks to BYVoid.")
 
 (defun pinyinlib-build-regexp-char
     (char &optional no-punc-p tranditional-p only-chinese-p mixed-p)
-  (let ((diff (- char ?a))
-        regexp)
+  (let* ((diff (- char ?a))
+         (method pinyinlib-use-method)
+         (simplified-table (symbol-value
+                            (intern (format "pinyinlib--simplified-char-table-%s" method))))
+         (traditional-table (symbol-value
+                             (intern (format "pinyinlib--traditional-char-table-%s" method))))
+         regexp)
     (if (or (>= diff 26) (< diff 0))
         (or (and (not no-punc-p)
                  (assoc-default
@@ -305,18 +310,17 @@ Thanks to BYVoid.")
             (regexp-quote (string char)))
       (setq regexp
             (if mixed-p
-                (concat (nth diff pinyinlib--traditional-char-table)
-                        (nth diff pinyinlib--simplified-char-table))
+                (concat (nth diff traditional-table)
+                        (nth diff simplified-table))
               (nth diff
                    (if tranditional-p
-                       pinyinlib--traditional-char-table
-                     pinyinlib--simplified-char-table))))
+                       traditional-table
+                     simplified-table))))
       (if only-chinese-p
           (if (string= regexp "")
               regexp
             (format "[%s]" regexp))
-        (format "[%c%s]" char
-                regexp)))))
+        (format "[%c%s]" char regexp)))))
 
 (defun pinyinlib-build-regexp-string
     (str &optional no-punc-p tranditional-p only-chinese-p mixed-p)
